@@ -425,8 +425,10 @@ export default function App() {
             const cfg = await api.getConfig();
             setConfig(cfg);
             if (cfg?.default_engine) setDefaultEngine(cfg.default_engine);
-            if (Array.isArray(cfg?.folders) && cfg.folders.length) setFolders(cfg.folders);
-          } catch { /* optional */ }
+            // Live mode shows only the engine's folders, even when there are
+            // none yet: the demo sample folders must not leak in.
+            setFolders(Array.isArray(cfg?.folders) ? cfg.folders : []);
+          } catch { setFolders([]); }
           setMode("live");
         } catch { setMode("demo"); }
       } else { setMode("demo"); }
